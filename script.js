@@ -1,14 +1,13 @@
 const mainEl = document.querySelector("main")
 
 function makeInputArea() {
-    let tickers = ""
+    let tickers = []
     const inputAreaEl = document.createElement('div')
     inputAreaEl.id = 'inputArea'
-    inputAreaEl.innerHTML = `
-        <p id="details">Add up to 3 stock tickers below to
-            get a super accurate stock
-            predictins report 👇
-        </p>`
+
+    const detailsTxtEl = document.createElement('p')
+    detailsTxtEl.id = 'details'
+    detailsTxtEl.textContent = "Add up to 3 stock tickers below to get a super accurate stock predictins report 👇"
 
     const tickerToolEl = document.createElement('div')
     tickerToolEl.id = "tickerTool"
@@ -17,17 +16,40 @@ function makeInputArea() {
     tickerInputEl.type = "text"
     tickerInputEl.id = 'tickerInput'
     tickerInputEl.placeholder = "AAPL"
+    tickerInputEl.addEventListener('input', () => {
+        // here i'll check if the entered value is not empty
+        // and the value is in english and the number of the entered values 
+        // are less than 3 values
+        if (tickerInputEl.value !== ""
+            && tickerInputEl.value.match(/^[A-Z]+$/i) && tickers.length < 3)
+            crossEl.disabled = false
+        else {
+            detailsTxtEl.textContent = "The thicker names should be in English without numbers, and at most three ones."
+            detailsTxtEl.style.color = '#ef233c'
+            crossEl.disabled = true
+        }
+    })
 
-    const crossEl = document.createElement('div')
+    const crossEl = document.createElement('button')
     crossEl.id = 'cross'
     crossEl.textContent = "+"
+    crossEl.disabled = true
     crossEl.addEventListener('click', () => {
         const value = tickerInputEl.value.trim()
         if (value) {
-            tickers += value + ", "
-            tickerTxtEl.textContent = tickers
+            tickers.push(value.toUpperCase())
+            tickerTxtEl.textContent = tickers.join(', ')
             tickerInputEl.value = ""
+            //here i'll enable the upload btn, because there is a value has been 
+            //inputed
             uploadBtnEl.disabled = false
+            //here i'll disable the add button (cross) if the values
+            //that has been inputed reached 3 values
+            if (tickers.length === 3) {
+                crossEl.disabled = true
+                tickerInputEl.placeholder = "Max 3 input reached!"
+                tickerInputEl.style.fontSize = "20px"
+            }
         }
     })
 
@@ -38,10 +60,8 @@ function makeInputArea() {
     const uploadBtnEl = document.createElement("button")
     uploadBtnEl.id = "uploadBtn"
     uploadBtnEl.textContent = "GENERATE REPORT"
-    if (tickers === "") uploadBtnEl.disabled = true
-    uploadBtnEl.addEventListener('click', () => {
-        showData(tickers)
-    })
+    if (tickers.length === 0) uploadBtnEl.disabled = true
+    uploadBtnEl.addEventListener('click', () => showData(tickers))
 
     tickerToolEl.append(tickerInputEl, crossEl)
 
@@ -49,7 +69,7 @@ function makeInputArea() {
     noteTxtEl.id = 'noteTxt'
     noteTxtEl.textContent = "Always correct 15% of the time!"
 
-    inputAreaEl.append(tickerToolEl, tickerTxtEl, uploadBtnEl, noteTxtEl)
+    inputAreaEl.append(detailsTxtEl, tickerToolEl, tickerTxtEl, uploadBtnEl, noteTxtEl)
     mainEl.appendChild(inputAreaEl)
 }
 
@@ -99,3 +119,4 @@ function makeReportArea(tickers) {
 }
 
 makeInputArea()
+
