@@ -91,7 +91,7 @@ async function fetchData(tickers) {
                     {
                         parts: [
                             {
-                                text: `make me a report about these stocks ${tickers}, and make it breif with at most 5 lines for each stock. and make each stock in a separate paragraph with a line white space break.`
+                                text: `make me a report about these stocks ${tickers} if I should invest in them, and make it breif with at most 5 lines for each stock. and make each stock in a separate paragraph with a line white space break. and make the header of each paragraph bold`
                             }
                         ]
                     }
